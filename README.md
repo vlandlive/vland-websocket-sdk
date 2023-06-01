@@ -1,5 +1,5 @@
 
-# Vland Websocket sdk ( node.js )
+# Vland Websocket SDK ( Node.JS )
 We provide a highly efficient Websocket SDK based on the Vland platform, which includes various built-in interfaces for easy access and modification of the environment and character states within the scene. In addition, our SDK supports customized development, allowing you to quickly build various small games and add more fun and excitement to your application. Let's work together to create a better and more enriched virtual world!
 
 
@@ -27,7 +27,7 @@ import {VlandApp} from 'vlandapi'
 
 // Configuration parameters {apiId，apiKey，eventId，spaceId}
 const wsconfig = {
-  // user vland id, can be found in https://virtualspace.live
+  // user vland id, can be found in https://us.vland.live/app
   apiId: "4178966954",
   // The apikey for your vland event
   apiKey: "7mXWDiDDy6Y********3NCLFPG4C6Y",
