@@ -1,0 +1,18 @@
+{
+    "entryPoints": [
+        "src/core/VlandApp.ts",
+        "src/core/apiEnum.ts",
+        "src/core/Control.ts",
+        "src/core/Engine.ts",
+        "src/core/Game.ts",
+        "src/core/Player.ts",
+        "src/core/Robot.ts",
+        "src/core/Scene.ts",
+
+        "src/assets/proto/api.d.ts"
+    ],
+    "out": "docs",
+    "readme": "none",
+    "includeVersion": true,
+    "disableSources": false
+}

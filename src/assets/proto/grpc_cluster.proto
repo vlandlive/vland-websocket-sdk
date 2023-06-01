@@ -1,0 +1,627 @@
+syntax = "proto3";
+package pb;
+option go_package = "/;pb";
+import "grpc_cluster.proto";
+
+enum StatusType{
+  NORMAL = 0;
+  OFFLINE = 1 ;
+}
+
+enum AnimationType{
+  DANCE_1 = 0;
+  DANCE_2 = 1;
+  DANCE_3 = 2;
+  DANCE_4 = 3;
+  DANCE_5 = 4;
+  DANCE_6 = 5;
+  DANCE_7 = 6;
+  DANCE_8 = 7;
+  DANCE_9 = 8;
+  DANCE_10 = 9;
+  //
+  HELLO_B =10;
+  HELLO_F =11;
+  HELLO_P =12;
+  //
+  JUMP_B = 13;
+  JUMP_F = 14;
+  JUMP_P = 15;
+  //
+  STAND_B=16;
+  STAND_F=17;
+  STAND_P=18;
+  //
+  WALK_B=19;
+  WALK_F=20;
+  WALK_P=21;
+  //
+  SIT_B=22;
+  SIT_F=23;
+  SIT_P=24;
+}
+
+enum DirectionType{
+  LEFT = 0;
+  RIGHT = 1;
+  UP = 2;
+  DOWN = 3;
+}
+
+enum MoveMode{
+  NORMAL_MODE = 0;
+  FLY_MODE = 1;
+}
+
+enum BgmStatus{
+  RESET = 0; // 重置
+  START = 1; // 开始
+  SUSPENDED = 2; // 暂停
+}
+
+enum PopupType{
+  LocalFile        = 0; // 本地文件
+  LocalVideo       = 1; // 本地视频
+  LocalPicture     = 2; // 本地图片
+  LiveStream       = 3; // 直播流
+  StickyNote       = 4; // 便利贴
+  Whiteboard       = 5; // 白板
+  HyperlinkIframe  = 6; // 超链接(内嵌网页)
+  HyperlinkWindow  = 7; // 超链接(网页弹窗)
+  SpecialEffects   = 8; // 特效
+}
+
+//enum MoveType{
+//  Move_AStar = 0;
+//  Move_Left = 1;
+//  Move_Right = 2;
+//  Move_Up = 3;
+//  Move_Down = 4;
+//}
+
+message ConnectSpaceReq{
+  string SpaceId = 1;
+  string Pid = 2;
+  string EventId = 3;
+}
+
+//加入场景
+message JoinReq{
+  string Pid = 1;
+  string RealName = 2;
+  string SpaceId = 3;
+  string EventId = 4;
+  string I = 5;
+  // @inject_tag: json:"X"
+  int32 X = 6;
+  // @inject_tag: json:"Y"
+  int32 Y = 7;
+}
+
+message ExitSpaceReq{
+  string SpaceId = 1;
+  string Pid = 2;
+}
+
+//发送附近消息
+message SendNearMessageReq  {
+  string Content = 1;
+  // @inject_tag: json:"SpeakType"
+  int32 SpeakType = 2;
+}
+
+//发送私聊消息
+message SendPrivateMessageReq  {
+  string Pid = 1;
+  string Content = 2;
+  // @inject_tag: json:"SpeakType"
+  int32 SpeakType = 3;
+}
+
+//发送全局消息
+message SendGlobalMessageReq  {
+  string Content = 1;
+  // @inject_tag: json:"SpeakType"
+  int32 SpeakType = 2;
+}
+
+//发送活动消息
+message SendEventMessageReq  {
+  string Content = 1;
+  // @inject_tag: json:"SpeakType"
+  int32 SpeakType = 2;
+}
+
+//移动请求
+message MoveReq{
+  // @inject_tag: json:"X"
+  int32 X = 1;
+  // @inject_tag: json:"Y"
+  int32 Y = 2;
+}
+
+////移动请求2.0
+//message StartMoveReq{
+//  MoveType MType = 1;
+//  repeated PointXY road= 2;
+//}
+//
+//message StopMoveReq{
+//  int32 StopX = 1;
+//  int32 StopY = 2;
+//}
+//
+//message PointXY{
+//  int32 PointX = 1;
+//  int32 PointY = 2;
+//}
+//
+//message PlayerStartMoveNotice{
+//  string Pid = 1;
+//  MoveType MType = 2;
+//  repeated PointXY road = 3;
+//}
+//message PlayerStopMoveNotice{
+//  string Pid = 1;
+//  int32 StopX = 2;
+//  int32 StopY = 3;
+//}
+
+//改变状态
+message ChangeStatusReq  {
+  // @inject_tag: json:"Status"
+  StatusType Status = 1;
+}
+
+//改变形象
+message ChangeImageReq  {
+  string Image = 1;
+}
+
+//改变名称
+message ChangeRealNameReq  {
+  string RealName = 1;
+}
+
+//改变动作
+message ChangeAnimationReq  {
+  // @inject_tag: json:"A"
+  AnimationType A = 1;
+}
+
+//面向
+message ChangeDirectionReq  {
+  // @inject_tag: json:"D"
+  DirectionType D = 1;
+}
+
+//设置高亮
+message SetHighLightReq{
+  string EventId = 1;
+  string SpaceId = 2;
+  string Pid = 3;
+}
+
+//取消高亮
+message DeleteHighLightReq{
+  string EventId = 1;
+  string SpaceId = 2;
+  string Pid = 3;
+}
+
+//获取场景里的高亮
+message GetHighLightReq{
+  string SpaceId = 1;
+}
+
+//设置超级高亮
+message SetSuperHighLightReq{
+  string EventId = 1;
+  string SpaceId = 2;
+  string Pid = 3;
+}
+
+//取消超级高亮
+message DeleteSuperHighLightReq{
+  string EventId = 1;
+  string SpaceId = 2;
+  string Pid = 3;
+}
+
+//获取场景里的超级高亮
+message GetSuperHighLightReq{
+  string EventId = 1;
+}
+
+message GetOnlinePeopleReq{
+  string SpaceId = 1;
+}
+
+message TransferReq{
+  // @inject_tag: json:"X"
+  int32 X = 1;
+  // @inject_tag: json:"Y"
+  int32 Y = 2;
+  int32 Type = 3;
+}
+
+message EventAllStaffPopupReq {
+  EventAllStaffPopup EventAllStaffPopup = 1;
+}
+
+message QueryPeopleOnlineReq {
+  string EventId = 1;
+  string Pid = 2;
+}
+
+message EventAllStaffPopupFile {
+  string Name = 1;// 名称
+  string Md5 = 2;// 文件唯一值
+}
+
+message EventAllStaffPopup {
+  string EventId = 1;// 活动id
+  string Name = 2;// 名称
+  string Background = 3;// 背景色/底色
+  PopupType Type = 4;// 弹窗属性/弹窗类型
+  string Content = 5;// 内容（不同的弹窗类型，对应的内容可能不一样）
+  EventAllStaffPopupFile File = 6;// 对应的文件内容
+  bool developerMode = 7;//开发者模式
+}
+
+message SendMyPosition  {
+  string Pid = 1;
+  // @inject_tag: json:"X"
+  int32 X = 2;
+  // @inject_tag: json:"Y"
+  int32 Y = 3;
+  int32 lineId = 4; // 分线Id
+}
+
+message Pid  {
+  string Pid = 1;
+}
+
+message Position  {
+  string Pid = 1;//id
+  string RealName = 2;//昵称
+  // @inject_tag: json:"X"
+  int32  X = 3;//X坐标
+  // @inject_tag: json:"Y"
+  int32  Y = 4;//Y坐标
+  // @inject_tag: json:"D"
+  DirectionType  D = 5;//面向
+  // @inject_tag: json:"A"
+  AnimationType A = 6;//动作
+  // @inject_tag: json:"S"
+  StatusType  S = 7;//状态
+  bool B = 8;//是否刚刚出生（出生动画）
+  string I = 9;//服装
+  // @inject_tag: json:"moveMode"
+  MoveMode moveMode = 10;//移动状态
+  bool IsRaiseHand = 11;//是否举手状态
+}
+
+message MovePosition  {
+  string Pid = 1;
+  // @inject_tag: json:"X"
+  int32 X = 2;
+  // @inject_tag: json:"Y"
+  int32 Y = 3;
+  bool Transfer = 4;
+}
+
+message HighLightPlayer{
+  string Pid = 1;
+  // @inject_tag: json:"S"
+  StatusType  S = 2;
+  string RealName = 3;
+  string I = 4;
+  string SpaceId = 5;
+  bool IsRaiseHand = 6;//是否举手状态
+}
+
+message AllHighLightPlayers{
+  repeated HighLightPlayer HighLightPlayer = 1;
+}
+
+message HighLightUpdate {
+  string Pid = 1;
+  // @inject_tag: json:"Event"
+  int32 Event = 2;
+  string RealName = 3;
+  string I = 4;
+  string SpaceId = 5;
+}
+
+message NewStatus  {
+  string Pid = 1;
+  StatusType  S = 2;
+}
+
+message NewImage  {
+  string Pid = 1;
+  string I = 2;
+}
+
+message NewName  {
+  string Pid = 1;
+  string Name = 2;
+}
+
+message UserMessage  {
+  string MsgId = 1;
+  string Pid = 2;
+  string RealName = 3;
+  int64  Time = 4;
+  string Content = 5;
+  // @inject_tag: json:"SpeakType"
+  int32 SpeakType = 6;
+  string I = 7;
+}
+
+message Direction  {
+  string Pid = 1;
+  // @inject_tag: json:"D"
+  DirectionType D = 2;
+}
+
+message Rollback  {
+  // @inject_tag: json:"X"
+  int32 X = 1;
+  // @inject_tag: json:"Y"
+  int32 Y = 2;
+  // @inject_tag: json:"D"
+  DirectionType D = 3;
+}
+
+message SpaceId  {
+  string SpaceId = 1;
+}
+
+message Pids  {
+  repeated string Pid = 1;
+}
+
+message MemberInfo {
+  string Pid = 1;
+  string RealName = 2;
+  string I = 3;
+}
+
+//后续
+message Animation  {
+  string Pid = 1;
+  // @inject_tag: json:"A"
+  AnimationType  A = 2;
+}
+
+//修改人物行走状态
+message ChangeMoveModeReq {
+  // @inject_tag: json:"mode"
+  MoveMode mode = 1;
+}
+
+message MoveModeUpdate {
+  string Pid = 1;
+  // @inject_tag: json:"mode"
+  MoveMode mode = 2;
+}
+
+//公告消息
+message Notice{
+  int64 Timestamp = 1;
+  string Content = 2;
+}
+//转播屏推送
+message Screen{
+  bool   RealTime = 1;
+  string Pid = 2;
+  string RealName = 3;
+  string ScreenId = 4;
+  string ConvertId = 5;
+  string PlayURL = 6;
+}
+
+message AllScreens{
+  repeated Screen Screen = 1;
+}
+
+//space静音
+message Mute{
+  bool Mute = 1;
+}
+
+//通知space摄像头状态
+message SpaceCamera{
+  bool Camera = 1;
+}
+
+//通知space共享屏幕状态
+message SpaceShareScreen{
+  bool ShareScreen = 1;
+}
+
+//通知space bgm状态
+message SpaceBgm{
+  string Url = 1; // bgm链接
+  string Name = 2; // bgm名字
+  BgmStatus Status = 3; // 重置 播放 暂停
+}
+
+message SpaceStatus{
+  bool Mute = 1;
+  bool Camera = 2;
+  bool ShareScreen = 3;
+  SpaceBgm Bgm = 4;
+  //NEXT
+}
+
+message ChangeSpaceMuteReq{
+  string SpaceId = 1;
+  bool Mute = 2;
+}
+
+message ChangeSpaceCameraReq{
+  string SpaceId = 1;
+  bool Camera = 2;
+}
+
+message ChangeSpaceShareScreenReq{
+  string SpaceId = 1;
+  bool ShareScreen = 2;
+}
+
+message ChangeSpaceBgmReq{
+  string SpaceId = 1;
+  string Url = 2;
+  string Name = 3;
+  BgmStatus Status = 4;
+}
+
+message RealTimeScreenShareReq{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  string screenId = 4;
+}
+
+message Chat{
+  bool Chat = 1;
+}
+
+message EventStatus{
+  bool Chat = 1;
+}
+
+message ChangeEventChatReq{
+  string EventId = 1;
+  bool Chat = 2;
+}
+
+message ChangeEventBgmReq{
+  string EventId = 1;
+  string Url = 2;
+  string Name = 3;
+  BgmStatus Status = 4;
+}
+
+message TargetPosition{
+  // @inject_tag: json:"X"
+  int32 X = 1;
+  // @inject_tag: json:"Y"
+  int32 Y = 2;
+}
+
+//发送名片通知
+message SendCardNotice{
+  string cardId = 1;
+}
+
+//开始跟随
+message StartFollowReq{
+ string FollowPid = 1;//要跟随的玩家Id
+}
+
+// 跟随的队长位置更新
+message CaptainPositionUpdate {
+  string CaptainPid = 1;
+  // @inject_tag: json:"X"
+  int32 X = 2;
+  // @inject_tag: json:"Y"
+  int32 Y = 3;
+  // @inject_tag: json:"D"
+  DirectionType  D = 4;//面向
+}
+
+// 锁分线
+message LockSpaceLineReq {
+  int32 LineId = 1;// 分线Id
+  bool Lock = 2; // true锁定 false解锁
+}
+
+// 切换分线
+message SwitchSpaceLineReq {
+  int32 LineId = 1;// 分线Id
+}
+
+// 切换分线通知
+message SwitchSpaceLineNotice {
+  int32 LineId = 1;// 分线Id
+}
+
+message SpaceLineInfo{
+  int32 LineId = 1;
+  bool Locked = 2;
+  uint32 PlayerCount = 3;
+}
+
+// 查看分线地图信息
+message SpaceLineInfoReq {
+  string SpaceId = 1;
+}
+
+// 分线地图信息返回
+message SpaceLineInfoResp {
+  repeated SpaceLineInfo InfoArr = 1;
+}
+
+enum CmdScope{
+  SPACE = 0;
+  EVENT = 1;
+}
+
+enum InteractivePageType{
+  IFRAME = 0;
+}
+
+message InteractivePageInfo{
+  InteractivePageType pageType = 1; // 类型
+  string content = 2; // 内容url
+  bool devModel = 3; // 是否开发者模式
+  string color = 4; // page颜色
+}
+
+message OpenInteractivePageCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  CmdScope scope = 3;
+  InteractivePageInfo page = 4;
+}
+
+message OpenInteractivePageNotice{
+  InteractivePageInfo page = 1;
+}
+
+message MonitorAdminJoinCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string monitorAdminId = 3;
+}
+
+message MonitorAdminExitCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string monitorAdminId = 3;
+}
+
+message MonitorAdminJoinReq{
+  string eventId = 1;
+  string spaceId = 2;
+  string monitorAdminId = 3;
+  string frontServerId = 4;
+}
+
+message MonitorAdminJoinRes{
+  bool success = 1;
+}
+
+message MonitorAdminExitReq{
+  string eventId = 1;
+  string spaceId = 2;
+  string monitorAdminId = 3;
+}
+
+message MonitorAdminExitRes{
+  bool success = 1;
+}

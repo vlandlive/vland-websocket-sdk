@@ -1,0 +1,622 @@
+syntax = "proto3";
+package pb;
+option go_package = "/;pb";
+
+enum CmdScope{
+  SPACE = 0;
+  EVENT = 1;
+}
+
+
+enum StatusType{
+  NORMAL = 0;
+  OFFLINE = 1 ;
+}
+
+enum AnimationType{
+  DANCE_1 = 0;
+  DANCE_2 = 1;
+  DANCE_3 = 2;
+  DANCE_4 = 3;
+  DANCE_5 = 4;
+  DANCE_6 = 5;
+  DANCE_7 = 6;
+  DANCE_8 = 7;
+  DANCE_9 = 8;
+  DANCE_10 = 9;
+  //
+  HELLO_B =10;
+  HELLO_F =11;
+  HELLO_P =12;
+  //
+  JUMP_B = 13;
+  JUMP_F = 14;
+  JUMP_P = 15;
+  //
+  STAND_B=16;
+  STAND_F=17;
+  STAND_P=18;
+  //
+  WALK_B=19;
+  WALK_F=20;
+  WALK_P=21;
+  //
+  SIT_B=22;
+  SIT_F=23;
+  SIT_P=24;
+}
+
+enum InteractivePageType{
+  IFRAME = 0;
+  SpecialEffects = 1;
+}
+
+enum SpaceStatusType{
+  MuteStatus = 0;
+  CameraStatus = 1;
+  ShareScreenStatus = 2;
+}
+
+enum EventStatusType{
+  ChatStatus = 0;
+}
+
+enum ChatType{
+  Event = 0;
+  Space = 1;
+  Near = 2;
+}
+
+enum MapMaterialType{
+  Chartlet = 0;
+}
+
+enum BgmStatus{
+  RESET = 0; // 重置
+  START = 1; // 开始
+  SUSPENDED = 2; // 暂停
+}
+
+enum PopupType{
+  LocalFile        = 0; // 本地文件
+  LocalVideo       = 1; // 本地视频
+  LocalPicture     = 2; // 本地图片
+  LiveStream       = 3; // 直播流
+  StickyNote       = 4; // 便利贴
+  Whiteboard       = 5; // 白板
+  HyperlinkIframe  = 6; // 超链接(内嵌网页)
+  HyperlinkWindow  = 7; // 超链接(网页弹窗)
+  SpecialEffects   = 8; // 特效
+}
+
+enum DirectionType{
+  LEFT = 0;
+  RIGHT = 1;
+  UP = 2;
+  DOWN = 3;
+}
+
+enum MoveMode{
+  NORMAL_MODE = 0;
+  FLY_MODE = 1;
+}
+
+message Error{
+  string  Code = 1;
+  string   Msg = 2;
+  map<string, string>  Metadata = 3;
+}
+
+message ConnectSpaceReq{
+  string SpaceId = 1;
+  string Pid = 2;
+  string EventId = 3;
+}
+
+message Pid  {
+  string Pid = 1;
+}
+
+message SpaceId  {
+  string SpaceId = 1;
+}
+
+message Animation  {
+  string Pid = 1;
+  // @inject_tag: json:"A"
+  AnimationType  A = 2;
+}
+
+message Position  {
+  string Pid = 1;//id
+  string RealName = 2;//昵称
+  // @inject_tag: json:"X"
+  int32  X = 3;//X坐标
+  // @inject_tag: json:"Y"
+  int32  Y = 4;//Y坐标
+  // @inject_tag: json:"Z"
+  int32 Z = 5;
+  // @inject_tag: json:"Angle"
+  int32 Angle = 6;
+  // @inject_tag: json:"D"
+  DirectionType  D = 7;//面向
+  // @inject_tag: json:"A"
+  AnimationType A = 8;//动作
+  // @inject_tag: json:"S"
+  StatusType  S = 9;//状态
+  bool B = 10;//是否刚刚出生（出生动画）
+  string I = 11;//服装
+  // @inject_tag: json:"moveMode"
+  MoveMode MoveMode = 12;//移动状态
+  bool IsRaiseHand = 13;//是否举手状态
+  Identity Identity = 14; // 身份
+  repeated string Pets = 15; // 携带宠物信息
+  string RoleName = 16; // 用户角色名称
+  // @inject_tag: json:"RoleType"
+  RoleType RoleType = 17; // 用户角色类型
+}
+
+enum RoleType{
+  Role_1 = 0;
+  Role_2 = 1;
+  Role_3 = 2;
+  Role_4 = 3;
+  Role_5 = 4;
+}
+
+enum Identity{
+  Normal = 0; // 普通身份
+  Guest = 1; // 游客模式
+}
+
+message MovePosition  {
+  string Pid = 1;
+  // @inject_tag: json:"X"
+  int32 X = 2;
+  // @inject_tag: json:"Y"
+  int32 Y = 3;
+  bool Transfer = 4;
+}
+
+message UserMessage  {
+  string MsgId = 1;
+  string Pid = 2;
+  string RealName = 3;
+  int64  Time = 4;
+  string Content = 5;
+  // @inject_tag: json:"SpeakType"
+  int32 SpeakType = 6;
+  string I = 7;
+}
+
+message JoinReq{
+  string Pid = 1;
+  string RealName = 2;
+  string SpaceId = 3;
+  string EventId = 4;
+  string I = 5;
+  // @inject_tag: json:"X"
+  int32 X = 6;
+  // @inject_tag: json:"Y"
+  int32 Y = 7;
+}
+
+// 控制类
+
+message ChangeSpaceStatusCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  SpaceStatusType statusType = 3;
+  bool status = 4;
+}
+
+message ChangeEventStatusCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  EventStatusType statusType = 3;
+  bool status = 4;
+}
+
+message DeleteChatMessageCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  ChatType chatType = 3;
+  string msgId = 4;
+}
+
+message ChangeBgmCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  CmdScope scope = 3;
+  string url = 4;
+  string name = 5;
+  BgmStatus Status = 6;
+  double volume = 7; 
+}
+
+message EventAllStaffPopupFile {
+  string Name = 1;// 名称
+  string Md5 = 2;// 文件唯一值
+}
+
+
+message BroadcastEventSpecialEffectsCmd {
+    EventAllStaffPopup specialEffectInfo = 1;
+}
+
+message EventAllStaffPopup {
+  string EventId = 1;// 活动id
+  string Name = 2;// 名称
+  string Background = 3;// 背景色/底色
+  PopupType Type = 4;// 弹窗属性/弹窗类型
+  string Content = 5;// 内容（不同的弹窗类型，对应的内容可能不一样）
+  EventAllStaffPopupFile File = 6;// 对应的文件内容
+  bool developerMode = 7;//开发者模式
+  int32 Style = 8; // 1全屏 2居中
+}
+
+// 用户类
+
+message GetPlayerInfoCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated string pidArr = 3;
+}
+
+message PlayerPositionInfos{
+  repeated Position positionArr = 1;
+}
+
+message ChangePlayerPositionCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  int32 x = 4;
+  int32 y = 5;
+}
+
+message ChangePlayerDirectionCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  DirectionType direction = 4;
+}
+
+message ChangePlayerAnimationCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  AnimationType animation = 4;
+}
+
+message ChangePlayerMoveModeCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  MoveMode moveMode = 4;
+}
+
+message ChangePlayerImageCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  string image = 4;
+}
+
+message ChangePlayerFollowCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3;
+  string followPid = 4;
+}
+
+message AddPlayerListenerCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string listenerId = 3;
+  repeated string pidArr = 4;
+  int32 signal = 5;
+}
+
+message RemovePlayerListenerCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string listenerId = 3;
+  repeated string pidArr = 4;
+}
+
+
+
+// 场景类
+message MapPoint{
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message BirthPoint{
+  int32 x = 1;
+  int32 y = 2;
+  int32 weight = 3;
+}
+
+message PrivateSpace{
+  int32 privateOrder = 1; // 私密空间序号
+  repeated int32 gridArr = 2; // 格子号（y*map.width+x）
+}
+
+message LandMark{
+  string id = 1;
+  string name = 2;
+  int32 x = 3;
+  int32 y = 4;
+}
+
+message PortalTarget{
+  string eventId  = 1;
+  string spaceId = 2;
+  int32 targetType = 3;
+  string anchorId = 4;
+  string anchorName = 5;
+}
+
+message Portal{
+  repeated MapPoint locations = 1;
+  PortalTarget portTarget = 2;
+  bool skipConfirmation = 3;
+}
+
+message GridMaterial{
+  int32 grid = 1;
+  MapMaterialType materialType = 2;
+  string content = 3;
+}
+
+message SpaceMapInfo{
+  repeated MapPoint addBirthPointArr= 1; // 出生点
+  repeated MapPoint removeBirthPointArr= 2; // 出生点
+  repeated int32 addObstacleArr = 3; // 阻挡点
+  repeated int32 removeObstacleArr = 4; // 阻挡点
+  repeated LandMark addLandMarkArr = 5; // 地标点
+  repeated string removeLandMarkArr = 6; // 地标点
+  repeated Portal addPortalArr = 7; // 传送区域
+  repeated MapPoint removePortalArr = 8; // 传送区域
+  repeated GridMaterial gridMaterialArr = 9; // 素材
+}
+
+message GetSpaceMapInfoCmd{
+  string eventId = 1;
+  string spaceId = 2;
+}
+
+message AddSpaceMapBirthCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated BirthPoint birthPointArr = 3;
+}
+
+message RemoveSpaceMapBirthCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated MapPoint birthPointArr = 3;
+}
+
+message AddSpaceMapObstacleCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated int32 obstacleArr = 3;
+}
+
+message RemoveSpaceMapObstacleCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated int32 obstacleArr = 3;
+}
+
+message AddSpaceMapLandMarkCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated LandMark landMarkArr = 3;
+}
+
+message RemoveSpaceMapLandMarkCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated string landMarkIdArr = 3;
+}
+
+message AddSpaceMapPortalCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated Portal portalArr = 3;
+}
+
+message RemoveSpaceMapPortalCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated MapPoint portalPointArr = 3;
+}
+
+message AddSpaceMapGridMaterialCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated GridMaterial gridMaterialArr = 3;
+}
+
+message ClearSpaceMapGridMaterialCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated int32 gridArr = 3;
+}
+
+
+// API初始化赛车游戏
+message InitGameCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string name = 3;
+  string url = 4;
+  string icon = 5;
+  string describe = 6;
+}
+
+// API通知初始化结果
+message PreStartGameCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  int32 code = 3;
+  string message = 4;
+}
+
+// 赛车游戏开始倒计时
+message GameCountdownCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  int32 countdown = 3; // 倒计时
+}
+
+// 交互物体效果
+message TriggerInteractiveEffectCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3; // 用户id
+  string id = 4; // 交互物体id
+  int32 effect = 5; // 触发效果 枚举值
+}
+
+// 更新赛车排行版
+message UpdateGameRankListCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string type = 3; // 排行榜类型
+  repeated RankInfo rankInfo = 4;
+}
+
+message RankInfo{
+  string pid = 1; // 用户id
+  int64 time = 2; // 比赛耗时
+}
+
+// 完成游戏
+message FinishGameCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3; // 用户id
+}
+
+// 结束赛车游戏
+message StopGameCmd{
+  string eventId = 1;
+  string spaceId = 2;
+}
+
+// 监听完成
+message FinishGameNotice{
+  string pid = 1; // 用户id
+  int64 time = 2; // 比赛耗时
+}
+
+message GameInteractiveEffectCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3; // 用户id
+  // string name = 4; // 交互物名称
+  string effect = 5; // 效果
+} 
+
+// 特殊区域通知
+message GameTriggerSpecialAreaNotice{
+  string pid = 1; // 用户id
+  string name = 2; // 区域名称
+}
+
+// 交互物通知
+message GameTriggerInteractiveNotice{
+  string pid = 1; // 用户id
+  string name = 2; // 交互物名称
+  string call = 3; // 函数名
+  string param = 4; // 参数
+}
+
+// 改变人物移动速度
+message ChangeMoveSpeedCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string pid = 3; // 用户id
+  double speed = 4; // 速度
+  int32 duration = 5; // 持续时间
+}
+
+// 改变space设置
+message ChangeSpaceSettingCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  bool canHandUp = 3; // 是否可举手
+  bool canAutoMove = 4; // 是否可自动寻路
+  bool canFollow = 5; // 是否可跟随
+}
+
+// 获取特殊区域玩家列表
+message GetSpecialAreaPlayerInfoCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  int32 index = 3; // 区域序号（唯一）
+}
+message Pids  {
+  repeated string Pid = 1;
+}
+// 通用类型通知
+message GameToastCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  string type = 3;
+  string content = 4;
+  int64 duration = 5; // 时间
+  repeated string pidArr = 6; // 用户
+}
+
+// 弹出组件
+message ShowWidgetCmd{
+  string eventId = 1;
+  string spaceId = 2;
+  repeated string pidArr = 3; // 玩家
+  string type = 4; // 组件类型
+  string url = 5; // 地址
+  string param = 6; // 参数
+}
+
+message RobotJoinInfo{
+  string RobotId = 1;
+  string RobotName = 2;
+  string Avatar = 3;
+  int32 X = 4;
+  int32 Y = 5;
+}
+
+// 创建机器人
+message RobotJoinCmd{
+  string EventId = 1;
+  string SpaceId = 2;
+  repeated RobotJoinInfo joinInfoArr = 3;
+}
+
+// 机器人移动
+message RobotMoveCmd{
+  string EventId = 1;
+  string SpaceId = 2;
+  string RobotId = 3;
+  int32 X = 4;
+  int32 Y = 5;
+  string ChatMessage = 6;
+}
+
+// 机器人删除
+message RobotExitCmd{
+  string EventId = 1;
+  string SpaceId = 2;
+  repeated string RobotIdArr = 3; //为空删除所有
+}
+
+message SelfAndOthers {
+  string self = 1;
+  repeated string others = 2;
+}
